@@ -10,16 +10,16 @@
   <meta name="description" content="AI news today, in plain English — the latest AI news and artificial intelligence news that actually matters: big model launches, company moves and policy shifts. Your AI news daily briefing, refreshed every morning.">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="AI News" />
-  <meta property="og:title" content="OpenAI Unleashes GPT-6 Cyber — a Critical-Rated Hacking Model Locked Behind ID Checks | AI News" />
-  <meta property="og:description" content="Five fresh reports for Nov. 6: OpenAI releases GPT-6 Cyber, a Critical-rated security model that reproduced 1,724 Linux kernel vulnerabilities and found 81 unknown Firefox flaws; METR estimates Anthropic’s capability progress accelerated 1.9×, mostly driven by AI itself; Google’s Gemini Omni 1.2 Flash cuts synchronized AI video to about $0.07 a second; the Nasdaq falls 5.5% as voters reject data centers in 40 of 41 ballot measures; and Thinking Machines’ Inkling 2 Small scores 31 on the Artificial Analysis Intelligence Index ahead of an Apache 2.0 release." />
-  <meta property="og:url" content="https://ainews.app" />
-  <meta property="og:image" content="https://ainews.app/assets/nov6-gpt6-cyber-4k.webp" />
-  <meta property="og:image:width" content="2048" />
-  <meta property="og:image:height" content="1152" />
+  <meta property="og:title" content="OpenAI’s GPT-6 Cyber Found 81 Hidden Firefox Flaws — And 948 Ways Into Linux | AI News" />
+  <meta property="og:description" content="Five fresh reports for Nov. 7: OpenAI’s GPT-6 Cyber found 81 previously unknown high-severity Firefox flaws and helped build exploits for 948 Linux kernel vulnerabilities, scoring 48.5% on ExploitGym while staying in bounds more than 99% of the time; Google’s Gemini Omni 1.2 Flash goes generally available with 15-second clips, conversational editing and 720p pricing cut to $0.07 a second; Mira Murati’s Thinking Machines launches Inkling 2 Small, a 594-billion-parameter open challenger with only 17 billion active per token; METR says Anthropic’s progress is running at roughly twice its previous pace with AI itself driving the acceleration, though much of the evidence is redacted; and after voters backed limits on data centers in about 25 localities, OpenAI pledges in a National Community Compact to pay for its own power and post financial guarantees." />
+  <meta property="og:url" content="https://madisonshalom72.github.io/ai-news/" />
+  <meta property="og:image" content="https://madisonshalom72.github.io/ai-news/img/dc6236918abce544.webp" />
+  <meta property="og:image:width" content="1920" />
+  <meta property="og:image:height" content="1280" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="OpenAI Unleashes GPT-6 Cyber — a Critical-Rated Hacking Model Locked Behind ID Checks | AI News" />
-  <meta name="twitter:description" content="Nov. 6: OpenAI’s GPT-6 Cyber reproduces 1,724 Linux kernel vulnerabilities under a Critical rating, METR says Anthropic’s progress accelerated 1.9× mostly thanks to AI itself, Gemini Omni 1.2 Flash cuts AI video to $0.07 a second, the Nasdaq falls 5.5% as voters reject data centers 40 to 1, and Inkling 2 Small scores 31 ahead of its open-weights release." />
-  <meta name="twitter:image" content="https://ainews.app/assets/nov6-gpt6-cyber-4k.webp" />
+  <meta name="twitter:title" content="OpenAI’s GPT-6 Cyber Found 81 Hidden Firefox Flaws — And 948 Ways Into Linux | AI News" />
+  <meta name="twitter:description" content="Nov. 7: OpenAI’s GPT-6 Cyber finds 81 unknown Firefox flaws and helps build exploits for 948 Linux kernel bugs; Gemini Omni 1.2 Flash cuts 15-second AI video to $0.07 a second; Thinking Machines’ Inkling 2 Small packs 594 billion parameters with 17 billion active; METR says Anthropic’s progress is accelerating roughly 2x, driven mostly by AI itself; and OpenAI promises to pay for its own power after voters back data-center limits in about 25 localities." />
+  <meta name="twitter:image" content="https://madisonshalom72.github.io/ai-news/img/dc6236918abce544.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650;8..60,750&display=swap" rel="stylesheet">
@@ -4228,29 +4228,64 @@
       function showToast(msg){const toast=document.getElementById('toast');toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2600)}
 
       const shareIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.5-4.5M8.2 13.2l7.5 4.5"/></svg>';
+      const PAGE_URL='https://madisonshalom72.github.io/ai-news/';
+      function slugifyHeading(text){
+        return (text||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+      }
+      const usedIds=new Set([...document.querySelectorAll('[id]')].map(el=>el.id));
+      function ensureSlugId(el,headingText){
+        if(el.id) return el.id;
+        const base=slugifyHeading(headingText);
+        if(!base) return '';
+        let candidate=base;
+        let suffix=2;
+        while(usedIds.has(candidate)){candidate=base+'-'+suffix;suffix++;}
+        el.id=candidate;
+        usedIds.add(candidate);
+        return candidate;
+      }
+      stories.forEach(story=>{
+        const heading=story.querySelector('h3');
+        if(heading) ensureSlugId(story,heading.textContent);
+      });
+      document.querySelectorAll('.video-card').forEach(card=>{
+        const heading=card.querySelector('h3');
+        if(heading) ensureSlugId(card,heading.textContent);
+      });
+      function sectionShareUrl(el){
+        const section=el.closest('section');
+        const label=section?section.getAttribute('aria-labelledby'):null;
+        const headingId=label?label.trim().split(/\s+/)[0]:'';
+        return headingId?PAGE_URL+'#'+headingId:PAGE_URL;
+      }
+      function storyShareUrl(el){
+        const article=el.closest('.story');
+        if(article&&article.id) return PAGE_URL+'#'+article.id;
+        return sectionShareUrl(el);
+      }
       async function sharePayload(title,text,url){
         const payload={title:title,text:text};
         if(url) payload.url=url;
         if(navigator.share){
           try{await navigator.share(payload);return;}catch(error){if(error.name==='AbortError')return;}
         }
-        try{await navigator.clipboard.writeText(url||text);showToast(url?'Source link copied':'Share text copied');}
+        try{await navigator.clipboard.writeText(url||text);showToast('Page link copied');}
         catch(error){showToast('Sharing is unavailable in this view');}
       }
       document.querySelectorAll('.section-share').forEach(button=>{
         button.innerHTML=shareIcon+'<span>'+button.textContent+'</span>';
-        button.addEventListener('click',()=>sharePayload(button.dataset.shareTitle,button.dataset.shareText));
+        button.addEventListener('click',()=>sharePayload(button.dataset.shareTitle,button.dataset.shareText,sectionShareUrl(button)));
       });
       document.querySelectorAll('.share-control[data-share-title]').forEach(button=>{
         button.innerHTML=shareIcon+'<span>'+button.textContent+'</span>';
-        button.addEventListener('click',()=>sharePayload(button.dataset.shareTitle,button.dataset.shareText));
+        button.addEventListener('click',()=>sharePayload(button.dataset.shareTitle,button.dataset.shareText,storyShareUrl(button)));
       });
       stories.forEach(story=>{
         const source=story.querySelector('.read-link');
         if(!source) return;
         const actions=document.createElement('div');actions.className='card-actions';
         const button=document.createElement('button');button.className='share-control';button.type='button';button.innerHTML=shareIcon+'<span>Share story</span>';
-        button.addEventListener('click',()=>sharePayload(story.querySelector('h3').textContent,story.querySelector('p').textContent,source.href));
+        button.addEventListener('click',()=>sharePayload(story.querySelector('h3').textContent,story.querySelector('p').textContent,story.id?PAGE_URL+'#'+story.id:PAGE_URL));
         actions.appendChild(button);
         source.parentElement.appendChild(actions);
       });
@@ -4276,7 +4311,7 @@
         const actions=document.createElement('div');actions.className='video-actions';
         source.parentElement.insertBefore(actions,source);actions.appendChild(source);
         const share=document.createElement('button');share.className='share-control';share.type='button';share.innerHTML=shareIcon+'<span>Share video</span>';
-        share.addEventListener('click',()=>sharePayload(card.querySelector('h3').textContent,card.querySelector('p').textContent,source.href));
+        share.addEventListener('click',()=>sharePayload(card.querySelector('h3').textContent,card.querySelector('p').textContent,card.id?PAGE_URL+'#'+card.id:PAGE_URL));
         const tune=document.createElement('button');tune.className='tune-control';tune.type='button';tune.textContent='Tune feed to '+(topic==='agents'?'Agents':'Trust');
         tune.addEventListener('click',()=>{applyFocus(topic);document.getElementById('adaptive-title').scrollIntoView({behavior:'smooth',block:'center'});showToast('Recommendations tuned to '+topic);});
         actions.append(share,tune);
